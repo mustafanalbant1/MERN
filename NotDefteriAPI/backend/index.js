@@ -14,7 +14,7 @@ app.use(cors());
 // MongoDB Connection
 require('dotenv').config();
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect("mongodb+srv://deneme:deneme1234@cluster0.u0cfy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     .then(() => {
         console.log('MongoDB bağlantısı başarılı!');
     })
