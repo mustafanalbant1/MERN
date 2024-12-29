@@ -5,6 +5,7 @@ import { getProductsDetail } from "../redux/productSlice";
 import Slider from "react-slick";
 import Button from "../components/Button";
 import ReactStars from "react-rating-stars-component";
+import { addToCart } from "../redux/cartSlice";
 
 const Detail = () => {
   const { id } = useParams();
@@ -26,9 +27,19 @@ const Detail = () => {
     slidesToScroll: 1,
   };
 
-  const addBasket = () => {};
+  const addBasket = () => {
+    const data = {
+      id: product?.product?._id,
+      name: product?.product?.name,
+      image: product?.product?.images[0]?.url,
+      price: product?.product?.price,
+      quantity: quantity,
+    };
+    dispatch(addToCart(data));
+  };
+
   const decrement = () => {
-    if (quantity > 0) {
+    if (quantity > 1) {
       setQuantity(quantity - 1);
     }
   };

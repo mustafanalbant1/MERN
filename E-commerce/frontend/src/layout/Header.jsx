@@ -10,6 +10,7 @@ const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [keyword, setKeyword] = useState("");
   const { user, isAuth } = useSelector((state) => state.user);
+  const { carts } = useSelector((state) => state.cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -44,10 +45,8 @@ const Header = () => {
     } else {
       navigate(item.url); // Navigate to other pages (Profile/Admin)
     }
+    setOpenMenu(false); // Menü öğesi seçildikten sonra menüyü kapat
   };
-
-  console.log(isAuth);
-  console.log(user);
 
   return (
     <div className="bg-gray-100 px-5 py-3 flex items-center justify-between shadow-md">
@@ -106,10 +105,13 @@ const Header = () => {
           )}
         </div>
 
-        <div className="relative cursor-pointer">
+        <div
+          onClick={() => navigate("/cart")}
+          className="relative cursor-pointer"
+        >
           <FaShoppingBasket className="text-2xl text-gray-700" />
           <div className="absolute -top-2 -right-2 bg-red-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs font-semibold shadow-md">
-            4
+            {carts?.length}
           </div>
         </div>
       </div>

@@ -1,23 +1,30 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import Button from "../components/Button";
+import { useParams } from "react-router-dom";
+import { resetPassword } from "../redux/userSlice";
 
 const ResetPassword = () => {
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const { token } = useParams(); // URL'deki token'i al
+
+  const forgotFunc = () => {
+    let res = dispatch(resetPassword({ token, password }));
+    console.log(res, "ressss");
+  };
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-semibold text-center mb-4">
-          Yeni Şifre Oluştur
-        </h2>
-
+    <div className="flex h-screen items-center justify-center">
+      <div className="w-1/3 space-y-3">
+        <div className="text-3x1">Yeni Şifremi Oluştur</div>
         <input
-          placeholder="Yeni şifre girin"
-          onChange={() => {}}
-          name="password"
-          id="passrord"
-          type="password"
-          className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder={"Yeni Şifre"}
+          onChange={(e) => setPassword(e.target.value)}
+          name={"password"}
+          id={""}
         />
-
-        <Button name="Onayla" onClick={() => {}} />
+        <Button name={"Onayla"} onClick={forgotFunc} />
       </div>
     </div>
   );

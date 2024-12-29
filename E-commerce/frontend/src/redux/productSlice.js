@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   products: [],
+  adminProducts: [],
   product: {},
   loading: false,
 };
@@ -35,6 +36,17 @@ export const getProductsDetail = createAsyncThunk("product", async (id) => {
   return response.json();
 });
 
+export const getAdminProduct = createAsyncThunk("admin", async () => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`http://localhost:4000/admin/products`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.json();
+});
+
 export const productSlice = createSlice({
   name: "products",
   initialState,
@@ -62,6 +74,13 @@ export const productSlice = createSlice({
       .addCase(getProductsDetail.rejected, (state, action) => {
         state.loading = false;
         console.error(action.error.message);
+      })
+      .addCase(getAdminProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAdminProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.adminProducts = action.payload;
       });
   },
 });

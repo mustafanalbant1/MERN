@@ -14,20 +14,14 @@ const Products = () => {
   const [category, setCategory] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
 
-  console.log("Products:", products);
-
   const itemsPerPage = 3;
   const endOffset = itemOffset + itemsPerPage;
 
   const currentItems = products?.products?.slice(itemOffset, endOffset);
-
   const pageCount = Math.ceil(products?.products?.length / itemsPerPage);
 
   const handlePageClick = (event) => {
     const newOffset = event.selected * itemsPerPage;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffset(newOffset);
   };
 
@@ -43,38 +37,56 @@ const Products = () => {
   }, [dispatch, keyword, price, rating, category]);
 
   return (
-    <div className="min-h-screen">
-      <div className="flex gap-3">
-        <Filter
-          setPrice={setPrice}
-          setRating={setRating}
-          setCategory={setCategory}
-        />
-        <div>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="flex flex-col lg:flex-row gap-6 p-5 flex-1">
+        {/* Sol Sidebar: Filtre */}
+        <div className="bg-white p-5 rounded-lg shadow-lg w-full lg:w-1/4">
+          <Filter
+            setPrice={setPrice}
+            setRating={setRating}
+            setCategory={setCategory}
+          />
+        </div>
+
+        {/* Sağ Taraf: Ürünler */}
+        <div className="flex-1">
           {loading ? (
-            "Loading..."
+            <div className="flex justify-center items-center min-h-[400px]">
+              <p className="text-gray-500 text-lg font-medium">Loading...</p>
+            </div>
           ) : (
-            <div className="flex items-center justify-center gap-5 my-5 p flex-wrap">
-              {currentItems?.length > 0
-                ? currentItems.map((product, i) => (
+            <div>
+              {/* Ürün Kartları */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {currentItems?.length > 0 ? (
+                  currentItems.map((product, i) => (
                     <ProductCard key={i} product={product} />
                   ))
-                : "No products found"}
+                ) : (
+                  <p className="col-span-full text-center text-gray-600 font-medium">
+                    No products found
+                  </p>
+                )}
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      <div className="flex justify-center mt-5">
-        {/* Pagination Controls */}
+      {/* Sayfalama Kontrolleri */}
+      <div className="mt-auto flex justify-center py-5 bg-gray-50">
         <ReactPaginate
           breakLabel="..."
-          nextLabel="next >"
+          nextLabel="Next >"
           onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={3}
           pageCount={pageCount}
-          previousLabel="< previous"
-          renderOnZeroPageCount={null}
+          previousLabel="< Previous"
+          containerClassName="flex items-center space-x-1"
+          pageClassName="px-3 py-1 rounded-lg bg-white text-gray-600 hover:bg-blue-100 cursor-pointer"
+          previousClassName="px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-600 cursor-pointer"
+          nextClassName="px-3 py-1 rounded-lg bg-blue-500 text-white hover:bg-blue-600 cursor-pointer"
+          activeClassName="bg-blue-500 text-white font-bold"
         />
       </div>
     </div>

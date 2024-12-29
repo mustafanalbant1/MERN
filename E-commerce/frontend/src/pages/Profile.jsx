@@ -1,8 +1,14 @@
 import { useSelector } from "react-redux";
 import userImage from "../assets/image/user.png";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { user, isAuth } = useSelector((state) => state.user);
+  const navigate = useNavigate(); // useNavigate hook'unu kullanıyoruz
+
+  if (!isAuth) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -28,6 +34,17 @@ const Profile = () => {
               <h3 className="text-xl font-medium text-gray-800 mb-2">Phone</h3>
               <p className="text-gray-600">
                 {user?.user?.phone || "No phone number provided"}
+              </p>
+            </div>
+            <div className="mt-6">
+              <h3 className="text-xl font-medium text-gray-800 mb-2">
+                Password
+              </h3>
+              <p
+                className="text-gray-600 cursor-pointer"
+                onClick={() => navigate("/forgot")} // navigate fonksiyonunu çağırıyoruz
+              >
+                Güncelle
               </p>
             </div>
           </div>

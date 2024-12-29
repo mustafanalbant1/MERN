@@ -1,23 +1,30 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { forgotPassword } from "../redux/userSlice"; // AsyncThunk işlemini ekleyin
 import Button from "../components/Button";
 
 const ForgotPassword = () => {
+  const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+
+  const forgotFunc = () => {
+    let res = dispatch(forgotPassword(email));
+
+    console.log(res, "ress");
+  };
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-semibold text-center mb-4">
-          Şifremi Unuttum
-        </h2>
-
+    <div className="flex h-screen items-center justify-center">
+      <div className="w-1/3 space-y-3 ">
+        <div className="text-3xl">Şifremi Unuttum</div>
         <input
-          placeholder="E-posta adresinizi girin"
-          onChange={() => {}}
+          type="text"
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
           name="email"
-          id="email"
-          type="email"
-          className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          id=""
         />
-
-        <Button name="Onayla" onClick={() => {}} />
+        <Button name={"Onayla"} onclick={forgotFunc} />
       </div>
     </div>
   );

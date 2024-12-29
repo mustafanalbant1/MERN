@@ -14,6 +14,8 @@ import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Cart from "./pages/Cart";
+import Admin from "./pages/Admin";
 
 function App() {
   const dispatch = useDispatch();
@@ -22,7 +24,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token && !isAuth) {
-      dispatch(profile()); // Token varsa profil verisini al
+      dispatch(profile());
     }
   }, [dispatch, isAuth]);
 
@@ -32,9 +34,15 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route exact path="/auth" element={<Auth />} />
-        <Route element={<ProtectedRoute />}>
+        <Route exact path="/cart" element={<Cart />} />
+
+        <Route element={<ProtectedRoute isAdmin={false} />}>
           <Route exact path="/profile" element={<Profile />} />
         </Route>
+        <Route element={<ProtectedRoute isAdmin={true} user={user} />}>
+          <Route exact path="/admin" element={<Admin />} />
+        </Route>
+
         <Route exact path="/products" element={<Products />} />
         <Route exact path="/forgot" element={<ForgotPassword />} />
         <Route exact path="/reset/:token" element={<ResetPassword />} />
