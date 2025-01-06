@@ -1,77 +1,51 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
 const CategoryFilter = ({ onFilterChange }) => {
-  const { products } = useSelector((state) => state.products);
+  // Sabit marka ve numara seçenekleri
+  const brands = [
+    "Nike",
+    "Adidas",
+    "Puma",
+    "New Balance",
+    "Reebok",
+    "Under Armour",
+    "Asics",
+    "Converse",
+  ];
 
-  // Benzersiz kategorileri al
-  const categories = {
-    types: [
-      "Spor Ayakkabı",
-      "Günlük Ayakkabı",
-      "Koşu Ayakkabısı",
-      "Basketbol Ayakkabısı",
-    ],
-    brands: [...new Set(products?.map((p) => p.brand) || [])],
-    sizes: [...new Set(products?.map((p) => String(p.size)) || [])].sort(
-      (a, b) => a - b
-    ),
-    colors: [...new Set(products?.map((p) => p.color) || [])],
-    priceRanges: [
-      { label: "0 - 1000 ₺", value: "0-1000" },
-      { label: "1000 - 2000 ₺", value: "1000-2000" },
-      { label: "2000 - 3000 ₺", value: "2000-3000" },
-      { label: "3000 ₺ ve üzeri", value: "3000" },
-    ],
-  };
-
-  const handleCategoryClick = (category, value) => {
-    onFilterChange(category, value);
-  };
+  const sizes = Array.from({ length: 15 }, (_, i) => i + 36); // 36-50 arası numaralar
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm space-y-6">
-      {/* Ayakkabı Tipleri */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3">Kategoriler</h3>
-        <div className="flex flex-wrap gap-2">
-          {categories.types.map((type) => (
-            <button
-              key={type}
-              onClick={() => handleCategoryClick("type", type)}
-              className="px-4 py-2 text-sm bg-gray-100 hover:bg-orange-100 rounded-full transition-colors duration-200"
-            >
-              {type}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Markalar */}
-      <div>
+    <div className="space-y-6">
+      {/* Marka Filtresi */}
+      <div className="bg-white p-4 rounded-lg shadow-sm">
         <h3 className="text-lg font-semibold mb-3">Markalar</h3>
-        <div className="flex flex-wrap gap-2">
-          {categories.brands.map((brand) => (
-            <button
+        <div className="space-y-2 max-h-48 overflow-y-auto">
+          {brands.map((brand) => (
+            <label
               key={brand}
-              onClick={() => handleCategoryClick("brand", brand)}
-              className="px-4 py-2 text-sm bg-gray-100 hover:bg-orange-100 rounded-full transition-colors duration-200"
+              className="flex items-center space-x-2 cursor-pointer"
             >
-              {brand}
-            </button>
+              <input
+                type="checkbox"
+                onChange={() => onFilterChange("brand", brand)}
+                className="form-checkbox h-4 w-4 text-orange-600 rounded border-gray-300"
+              />
+              <span className="text-gray-700">{brand}</span>
+            </label>
           ))}
         </div>
       </div>
 
-      {/* Numaralar */}
-      <div>
+      {/* Numara Filtresi */}
+      <div className="bg-white p-4 rounded-lg shadow-sm">
         <h3 className="text-lg font-semibold mb-3">Numaralar</h3>
         <div className="grid grid-cols-4 gap-2">
-          {categories.sizes.map((size) => (
+          {sizes.map((size) => (
             <button
               key={size}
-              onClick={() => handleCategoryClick("size", size)}
-              className="px-3 py-2 text-sm bg-gray-100 hover:bg-orange-100 rounded-lg transition-colors duration-200"
+              onClick={() => onFilterChange("size", size.toString())}
+              className="p-2 text-sm border rounded-md hover:bg-orange-50 hover:border-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-600"
             >
               {size}
             </button>
@@ -79,35 +53,36 @@ const CategoryFilter = ({ onFilterChange }) => {
         </div>
       </div>
 
-      {/* Renkler */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3">Renkler</h3>
-        <div className="flex flex-wrap gap-2">
-          {categories.colors.map((color) => (
-            <button
-              key={color}
-              onClick={() => handleCategoryClick("color", color)}
-              className="px-4 py-2 text-sm bg-gray-100 hover:bg-orange-100 rounded-full transition-colors duration-200"
-            >
-              {color}
-            </button>
-          ))}
-        </div>
+      {/* Fiyat Aralığı Filtresi */}
+      <div className="bg-white p-4 rounded-lg shadow-sm">
+        <h3 className="text-lg font-semibold mb-3">Fiyat Aralığı</h3>
+        <select
+          onChange={(e) => onFilterChange("priceRange", e.target.value)}
+          className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-600"
+        >
+          <option value="">Tümü</option>
+          <option value="0-500">0 - 500 TL</option>
+          <option value="500-1000">500 - 1000 TL</option>
+          <option value="1000-2000">1000 - 2000 TL</option>
+          <option value="2000-99999">2000 TL ve üzeri</option>
+        </select>
       </div>
 
-      {/* Fiyat Aralıkları */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3">Fiyat Aralığı</h3>
-        <div className="flex flex-col gap-2">
-          {categories.priceRanges.map((range) => (
-            <button
-              key={range.value}
-              onClick={() => handleCategoryClick("priceRange", range.value)}
-              className="px-4 py-2 text-sm text-left bg-gray-100 hover:bg-orange-100 rounded-lg transition-colors duration-200"
-            >
-              {range.label}
-            </button>
-          ))}
+      {/* Renk Filtresi */}
+      <div className="bg-white p-4 rounded-lg shadow-sm">
+        <h3 className="text-lg font-semibold mb-3">Renkler</h3>
+        <div className="grid grid-cols-3 gap-2">
+          {["Siyah", "Beyaz", "Kırmızı", "Mavi", "Yeşil", "Sarı"].map(
+            (color) => (
+              <button
+                key={color}
+                onClick={() => onFilterChange("color", color)}
+                className="p-2 text-sm border rounded-md hover:bg-orange-50 hover:border-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-600"
+              >
+                {color}
+              </button>
+            )
+          )}
         </div>
       </div>
     </div>

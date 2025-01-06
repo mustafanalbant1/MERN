@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../redux/slices/productSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import CategoryFilter from "../../components/CategoryFilter";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { toast } from "react-hot-toast";
@@ -9,6 +9,9 @@ import { toast } from "react-hot-toast";
 const Products = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get("q");
   const { products, loading } = useSelector((state) => ({
     products: state.products.products || [],
     loading: state.products.loading,
@@ -34,21 +37,29 @@ const Products = () => {
     setFilteredProducts(products);
   }, [products]);
 
-  const handleFilterChange = (category, value) => {
-    // Aynı kategoriye tekrar tıklanırsa filtreyi kaldır
-    setActiveFilters((prev) => ({
-      ...prev,
-      [category]: prev[category] === value ? null : value,
-    }));
+  const handleFilterChange = (filterType, value) => {
+    setActiveFilters((prev) => {
+      // Eğer aynı değer tekrar seçilirse filtreyi kaldır
+      if (prev[filterType] === value) {
+        return { ...prev, [filterType]: null };
+      }
+      // Yeni filtre değerini ekle
+      return { ...prev, [filterType]: value };
+    });
   };
 
   useEffect(() => {
     let filtered = [...products];
 
-    // Tip filtresi
-    if (activeFilters.type) {
+    // Arama filtresi
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        (product) => product.category === activeFilters.type
+        (product) =>
+          product.name.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          product.brand.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query)
       );
     }
 
@@ -85,7 +96,7 @@ const Products = () => {
     }
 
     setFilteredProducts(filtered);
-  }, [products, activeFilters]);
+  }, [products, activeFilters, searchQuery]);
 
   const handleSort = (value) => {
     setSortBy(value);
