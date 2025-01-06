@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Regular', sans-serif;
+    user-select: none;
+    /* Tüm sayfa boyunca metin seçimi engellenir */
+}
+
+* {
+    -ms-overflow-style: none;
+    /* Internet Explorer için scrollbar kontrolü */
+    user-select: none;
+    /* Sayfadaki tüm öğelerde metin seçimini engeller */
+}
+
+/* Scrollbar'ı gizleme */
+::-webkit-scrollbar {
+    display: none;
+}
